@@ -28,11 +28,16 @@ object KLines {
 
       val engine = new EmptyRenderEngine
       engine.init(window, null)
+      engine.setUpdateCallback(update)
       engine.loop()
 
       window.destroy()
     } finally {
       SystemInterface.destroy()
     }
+  }
+
+  def update() {
+
   }
 }
