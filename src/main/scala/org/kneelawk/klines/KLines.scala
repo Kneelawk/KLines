@@ -17,61 +17,22 @@ object KLines {
     println("Hello LWJGL " + Version.getVersion + "!")
 
     try {
-      init()
-      loop()
+      SystemInterface.init()
 
-      glfwFreeCallbacks(window)
-      glfwDestroyWindow(window)
+      val window = new Window("KLines", 1280, 720)
+      window.init()
+      window.setKeyCallback((windowPtr, key, scancode, action, mods) =>
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) window.requestClose())
+      window.selectContext()
+      window.show()
+
+      val engine = new EmptyRenderEngine
+      engine.init(window, null)
+      engine.loop()
+
+      window.destroy()
     } finally {
-      glfwTerminate()
-    }
-  }
-
-  def init() {
-    GLFWErrorCallback.createPrint(Console.err)
-
-    if (!glfwInit())
-      throw new IllegalStateException("Failed to initialize GLFW")
-
-    glfwDefaultWindowHints()
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
-
-    val WIDTH = 300
-    val HEIGHT = 300
-
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
-    if (window == NULL)
-      throw new IllegalStateException("Failed to create GLFW window")
-
-    glfwSetKeyCallback(window, new GLFWKeyCallbackI {
-      def invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-          glfwSetWindowShouldClose(window, true)
-      }
-    })
-
-    val vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor())
-
-    glfwSetWindowPos(window, (vidMode.width() - WIDTH) / 2, (vidMode.height() - HEIGHT) / 2)
-
-    glfwMakeContextCurrent(window)
-    glfwSwapInterval(1)
-
-    glfwShowWindow(window)
-  }
-
-  def loop() {
-    GL.createCapabilities()
-
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
-
-    while (!glfwWindowShouldClose(window)) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-      glfwSwapBuffers(window)
-
-      glfwPollEvents()
+      SystemInterface.destroy()
     }
   }
 }
