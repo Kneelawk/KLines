@@ -28,5 +28,7 @@ class EmptyRenderEngine extends RenderEngine {
     }
   }
 
-  def setModels[Model: ModelRenderer](model: Model): Unit = ???
+  def addModel[Model: ModelRenderer](model: Model): Unit = ???
+  def removeModel[Model: ModelRenderer](model: Model): Unit = ???
+  def clearModels(): Unit = ???
 }

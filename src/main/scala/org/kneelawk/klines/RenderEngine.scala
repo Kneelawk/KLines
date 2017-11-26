@@ -23,6 +23,9 @@ trait RenderEngine {
    */
   def setUpdateCallback(callback: UpdateCallback)
 
-  // TODO Some engines only work with some models
-  def setModels[Model: ModelRenderer](model: Model)
+  def addModel[Model: ModelRenderer](model: Model)
+  
+  def removeModel[Model: ModelRenderer](model: Model)
+  
+  def clearModels()
 }
