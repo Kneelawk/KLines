@@ -1,10 +1,7 @@
 package org.kneelawk.klines
 
-import org.joml.Matrix4d
-import org.joml.Matrix4dc
-import org.joml.Vector3d
-import org.joml.Vector3f
 import org.joml.Matrix4f
+import org.joml.Vector3f
 
 class Camera {
   private val view = new Matrix4f()
@@ -37,7 +34,7 @@ class Camera {
   def setView(locationX: Float, locationY: Float, locationZ: Float, targetX: Float, targetY: Float, targetZ: Float, upX: Float, upY: Float, upZ: Float) {
     view.setLookAt(locationX, locationY, locationZ, targetX, targetY, targetZ, upX, upY, upZ)
   }
-  
+
   /**
    * Sets the camera's projection fovy, aspect ratio, z-near, and z-far.
    */
