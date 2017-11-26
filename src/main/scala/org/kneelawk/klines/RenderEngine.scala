@@ -24,5 +24,5 @@ trait RenderEngine {
   def setUpdateCallback(callback: UpdateCallback)
 
   // TODO Some engines only work with some models
-  def setModels()
+  def setModels[Model: ModelRenderer](model: Model)
 }
