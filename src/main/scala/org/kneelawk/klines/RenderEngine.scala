@@ -5,27 +5,37 @@ package org.kneelawk.klines
  * implicit ModelRenderers and have each one know how to render a specific kind of model?
  */
 
-trait RenderEngine {
-  type UpdateCallback = () => Unit
+class RenderEngine {
+  private var update: () => Unit = () => {}
+  private var window: Window = null
+  private var camera: Camera = null
 
-  /**
-   * Initialize the engine.
-   */
-  def init(window: Window, camera: Camera)
+  def init(window: Window, camera: Camera) {
+    this.window = window
+    this.camera = camera
 
-  /**
-   * Start the engine's render loop.
-   */
-  def loop()
+    GraphicsInterface.setupContext()
 
-  /**
-   * Set the callback for every render cycle.
-   */
-  def setUpdateCallback(callback: UpdateCallback)
+    GraphicsInterface.setBackground(0.2f, 0.2f, 0.2f, 1.0f)
+  }
 
-  def addModel[Model: ModelRenderer](model: Model)
-  
-  def removeModel[Model: ModelRenderer](model: Model)
-  
-  def clearModels()
+  def setUpdateCallback(callback: () => Unit) {
+    update = callback
+  }
+
+  def loop() {
+    while (!window.shouldWindowClose()) {
+      SystemInterface.pollEvents()
+
+      GraphicsInterface.update()
+
+      update()
+
+      window.refresh()
+    }
+  }
+
+  def addModel[Model: ModelRenderer](model: Model): Unit = ???
+  def removeModel[Model: ModelRenderer](model: Model): Unit = ???
+  def clearModels(): Unit = ???
 }
