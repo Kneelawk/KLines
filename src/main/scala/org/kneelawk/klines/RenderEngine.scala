@@ -35,7 +35,7 @@ class RenderEngine {
     }
   }
 
-  def addModel[Model: ModelRenderer](model: Model): Unit = ???
-  def removeModel[Model: ModelRenderer](model: Model): Unit = ???
+  def addModel(model: Model): Unit = ???
+  def removeModel(model: Model): Unit = ???
   def clearModels(): Unit = ???
 }
