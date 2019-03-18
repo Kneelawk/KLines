@@ -24,9 +24,7 @@ object KLines {
       window.selectContext()
       window.show()
 
-      val engine = new RenderEngine
-      engine.init(window, null)
-      engine.setUpdateCallback(update)
+      val engine = new RenderEngine(window, null, update)
       engine.loop()
 
       window.destroy()

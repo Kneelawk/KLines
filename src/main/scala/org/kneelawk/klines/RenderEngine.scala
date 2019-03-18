@@ -5,23 +5,10 @@ package org.kneelawk.klines
  * implicit ModelRenderers and have each one know how to render a specific kind of model?
  */
 
-class RenderEngine {
-  private var update: () => Unit = () => {}
-  private var window: Window = null
-  private var camera: Camera = null
+class RenderEngine(window: Window, camera: Camera, update: () => Unit = () => {}) {
+  GraphicsInterface.setupContext()
 
-  def init(window: Window, camera: Camera) {
-    this.window = window
-    this.camera = camera
-
-    GraphicsInterface.setupContext()
-
-    GraphicsInterface.setBackground(0.2f, 0.2f, 0.2f, 1.0f)
-  }
-
-  def setUpdateCallback(callback: () => Unit) {
-    update = callback
-  }
+  GraphicsInterface.setBackground(0.2f, 0.2f, 0.2f, 1.0f)
 
   def loop() {
     while (!window.shouldWindowClose()) {
@@ -36,6 +23,8 @@ class RenderEngine {
   }
 
   def addModel(model: Model): Unit = ???
+
   def removeModel(model: Model): Unit = ???
+
   def clearModels(): Unit = ???
 }
