@@ -32,6 +32,8 @@ trait WritableBufferObject extends BufferObject {
   def append(buf: DoubleBuffer)
   def append(value: Double)
 
+  def appendBlank(len: Long)
+
   def insert(offset: Long, buf: ByteBuffer)
   def insert(offset: Long, value: Byte)
   def insert(offset: Long, buf: ShortBuffer)
@@ -44,6 +46,8 @@ trait WritableBufferObject extends BufferObject {
   def insert(offset: Long, value: Float)
   def insert(offset: Long, buf: DoubleBuffer)
   def insert(offset: Long, value: Double)
+
+  def insertBlank(offset: Long, len: Long)
 
   def replace(offset: Long, chunkLen: Long, buf: ByteBuffer)
   def replace(offset: Long, chunkLen: Long, value: Byte)
@@ -83,6 +87,19 @@ trait WritableBufferObject extends BufferObject {
   def replaceBefore(cutoff: Long, value: Float)
   def replaceBefore(cutoff: Long, buf: DoubleBuffer)
   def replaceBefore(cutoff: Long, value: Double)
+
+  def replaceAll(buf: ByteBuffer)
+  def replaceAll(value: Byte)
+  def replaceAll(buf: ShortBuffer)
+  def replaceAll(value: Short)
+  def replaceAll(buf: IntBuffer)
+  def replaceAll(value: Int)
+  def replaceAll(buf: LongBuffer)
+  def replaceAll(value: Long)
+  def replaceAll(buf: FloatBuffer)
+  def replaceAll(value: Float)
+  def replaceAll(buf: DoubleBuffer)
+  def replaceAll(value: Double)
 
   def remove(offset: Long, chunkLen: Long)
 

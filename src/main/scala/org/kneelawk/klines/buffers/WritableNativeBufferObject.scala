@@ -32,22 +32,30 @@ trait WritableNativeBufferObject extends WritableBufferObject {
   def insertNative(offset: Long, len: Long, address: Long)
 
   /**
-   * Replaces the chunk at offset of size chunkLen with the data represented by len and data.
+   * Replaces the chunk at offset of size chunkLen with the data represented by len and address.
    * Memory length and address version.
    */
   def replaceNative(offset: Long, chunkLen: Long, len: Long, address: Long)
 
   /**
-   * Replaces everything at and after offset with the data represented by len and data.
+   * Replaces everything at and after offset with the data represented by len and address.
    * Memory length and address version.
    */
   def replaceAfterNative(offset: Long, len: Long, address: Long)
 
   /**
-   * Replaces everything before cutoff with the data by len and data.
+   * Replaces everything before cutoff with the data represented by len and address.
    * Memory length and address version.
    */
   def replaceBeforeNative(cutoff: Long, len: Long, address: Long)
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data represented by len and address.
+   *
+   * @param len     the length of the buffer in bytes.
+   * @param address the pointer address of the buffer.
+   */
+  def replaceAllNative(len: Long, address: Long)
 
 
   /**
@@ -785,6 +793,126 @@ trait WritableNativeBufferObject extends WritableBufferObject {
   override def replaceBefore(cutoff: Long, value: Double): Unit = {
     tryWith(stackPush()) { stack =>
       replaceBefore(cutoff, stack.doubles(value))
+    }
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data in buf.
+   *
+   * @param buf the buffer to replace all of this buffer's contents with.
+   */
+  override def replaceAll(buf: ByteBuffer): Unit = {
+    replaceAllNative(buf.remaining(), memAddress(buf))
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the single byte value.
+   *
+   * @param value the single byte to replace all of this buffer's contents with.
+   */
+  override def replaceAll(value: Byte): Unit = {
+    tryWith(stackPush()) { stack =>
+      replaceAll(stack.bytes(value))
+    }
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data in buf.
+   *
+   * @param buf the buffer to replace all of this buffer's contents with.
+   */
+  override def replaceAll(buf: ShortBuffer): Unit = {
+    replaceAllNative(buf.remaining() << 1, memAddress(buf))
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the single short value.
+   *
+   * @param value the single short to replace all of this buffer's contents with.
+   */
+  override def replaceAll(value: Short): Unit = {
+    tryWith(stackPush()) { stack =>
+      replaceAll(stack.shorts(value))
+    }
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data in buf.
+   *
+   * @param buf the buffer to replace all of this buffer's contents with.
+   */
+  override def replaceAll(buf: IntBuffer): Unit = {
+    replaceAllNative(buf.remaining() << 2, memAddress(buf))
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the single int value.
+   *
+   * @param value the single int to replace all of this buffer's contents with.
+   */
+  override def replaceAll(value: Int): Unit = {
+    tryWith(stackPush()) { stack =>
+      replaceAll(stack.ints(value))
+    }
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data in buf.
+   *
+   * @param buf the buffer to replace all of this buffer's contents with.
+   */
+  override def replaceAll(buf: LongBuffer): Unit = {
+    replaceAllNative(buf.remaining() << 3, memAddress(buf))
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the single long value.
+   *
+   * @param value the single long to replace all of this buffer's contents with.
+   */
+  override def replaceAll(value: Long): Unit = {
+    tryWith(stackPush()) { stack =>
+      replaceAll(stack.longs(value))
+    }
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data in buf.
+   *
+   * @param buf the buffer to replace all of this buffer's contents with.
+   */
+  override def replaceAll(buf: FloatBuffer): Unit = {
+    replaceAllNative(buf.remaining() << 2, memAddress(buf))
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the single float value.
+   *
+   * @param value the single float to replace all of this buffer's contents with.
+   */
+  override def replaceAll(value: Float): Unit = {
+    tryWith(stackPush()) { stack =>
+      replaceAll(stack.floats(value))
+    }
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data in buf.
+   *
+   * @param buf the buffer to replace all of this buffer's contents with.
+   */
+  override def replaceAll(buf: DoubleBuffer): Unit = {
+    replaceAllNative(buf.remaining() << 3, memAddress(buf))
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the single float value.
+   *
+   * @param value the single float to replace all of this buffer's contents with.
+   */
+  override def replaceAll(value: Double): Unit = {
+    tryWith(stackPush()) { stack =>
+      replaceAll(stack.doubles(value))
     }
   }
 }

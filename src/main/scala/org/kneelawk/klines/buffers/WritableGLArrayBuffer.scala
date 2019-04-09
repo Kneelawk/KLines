@@ -113,6 +113,20 @@ class WritableGLArrayBuffer(initialAllocation: Long) extends WritableNativeBuffe
   }
 
   /**
+   * Append empty space to the end of this buffer.
+   *
+   * @param len the size in bytes of the empty space to be appended.
+   */
+  override def appendBlank(len: Long): Unit = {
+    if (len < 0)
+      throw new IllegalArgumentException("The length of the extra space cannot be negative")
+
+    extendFromEnd(len)
+
+    size += len
+  }
+
+  /**
    * Inserts a chunk of data into this buffer at offset, moving the data currently after
    * offset to the end of where this chunk is inserted.
    * Memory length and address version.
@@ -127,6 +141,31 @@ class WritableGLArrayBuffer(initialAllocation: Long) extends WritableNativeBuffe
       copyChunk(offset, offset + len, size - offset)
       glBindBuffer(GL_ARRAY_BUFFER, defaultBuf)
       nglBufferSubData(GL_ARRAY_BUFFER, offset, len, address)
+
+      size += len
+    }
+  }
+
+  /**
+   * Inserts a chunk of blank space into this buffer at offset, moving the data currently after
+   * offset to the end of where this chunk is inserted.
+   *
+   * @param offset the offset in bytes where the empty chunk is to be inserted.
+   * @param len    the length in bytes of the chunk of empty space to insert.
+   */
+  override def insertBlank(offset: Long, len: Long): Unit = {
+    if (len < 0)
+      throw new IllegalArgumentException("The length of the inserted space cannot be negative")
+
+    if (offset < 0)
+      throw new IllegalArgumentException("The offset of the insertion point cannot be negative")
+
+    if (offset >= size) {
+      extendToPoint(offset + len)
+
+      size = offset + len
+    } else {
+      copyChunk(offset, offset + len, size - offset)
 
       size += len
     }
@@ -202,6 +241,22 @@ class WritableGLArrayBuffer(initialAllocation: Long) extends WritableNativeBuffe
     nglBufferSubData(GL_ARRAY_BUFFER, 0, len, address)
 
     size += lenDif
+  }
+
+  /**
+   * Replaces the entirety of the contents of this buffer with the data represented by len and address.
+   *
+   * @param len     the length of the buffer in bytes.
+   * @param address the pointer address of the buffer.
+   */
+  override def replaceAllNative(len: Long, address: Long): Unit = {
+    if (len < 0)
+      throw new IllegalArgumentException("The length of the buffer cannot be negative")
+
+    glBindBuffer(GL_ARRAY_BUFFER, defaultBuf)
+    nglBufferSubData(GL_ARRAY_BUFFER, 0, len, address)
+
+    size = len
   }
 
   /**
